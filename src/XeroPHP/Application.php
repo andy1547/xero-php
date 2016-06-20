@@ -9,6 +9,7 @@ use XeroPHP\Remote\Query;
 use XeroPHP\Remote\Request;
 use XeroPHP\Remote\URL;
 
+
 abstract class Application {
 
     protected static $_config_defaults = array(
@@ -163,10 +164,11 @@ abstract class Application {
 
     /**
      * @param Remote\Object $object
+     * @param bool $replace_data
      * @return null
      * @throws Exception
      */
-    public function save(Remote\Object $object) {
+    public function save(Remote\Object $object, $replace_data = false) {
 
         //Saves any properties that don't want to be included in the normal loop (special saving endpoints)
         $this->savePropertiesDirectly($object);
@@ -186,7 +188,7 @@ abstract class Application {
             }
 
             if(!$object::supportsMethod($method)){
-                throw new Exception('%s doesn\'t support [%s] via the API', get_class($object), $method);
+                throw new Exception(sprintf('%s doesn\'t support [%s] via the API', get_class($object), $method));
             }
 
             //Put in an array with the first level containing only the 'root node'.
@@ -198,7 +200,7 @@ abstract class Application {
             $response = $request->getResponse();
 
             if(false !== $element = current($response->getElements())) {
-                $object->fromStringArray($element);
+                $object->fromStringArray($element, $replace_data);
             }
             //Mark the object as clean since no exception was thrown
             $object->setClean();
@@ -271,7 +273,7 @@ abstract class Application {
      */
     private function savePropertiesDirectly(Remote\Object $object){
         foreach($object::getProperties() as $property_name => $meta){
-            if($meta[Remote\Object::KEY_SAVE_DIRECTLY] && $object->isPropertyDirty($property_name)){
+            if($meta[Remote\Object::KEY_SAVE_DIRECTLY] && $object->isDirty($property_name)){
                 //Then actually save
                 $property_objects = $object->$property_name;
                 $property_type = get_class(current($property_objects));
@@ -311,7 +313,7 @@ abstract class Application {
      */
     public function delete(Remote\Object $object) {
         if(!$object::supportsMethod(Request::METHOD_DELETE)){
-            throw new Exception('%s doesn\'t support [DELETE] via the API', get_class($object));
+            throw new Exception(sprintf('%s doesn\'t support [DELETE] via the API', get_class($object)));
         }
 
         $uri = sprintf('%s/%s', $object::getResourceURI(), $object->getGUID());
