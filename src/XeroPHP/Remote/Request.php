@@ -3,7 +3,7 @@
 namespace XeroPHP\Remote;
 
 use XeroPHP\Application;
-use XeroPHP\XeroException;
+use XeroPHP\Exception;
 use XeroPHP\Helpers;
 
 
@@ -53,7 +53,7 @@ class Request {
                 $this->method = $method;
                 break;
             default:
-                throw new XeroException("Invalid request method [$method]");
+                throw new Exception("Invalid request method [$method]");
         }
 
         //Default to XML so you get the  xsi:type attribute in the root node.
@@ -103,7 +103,7 @@ class Request {
         $info = curl_getinfo($ch);
 
         if($response === false) {
-            throw new XeroException('Curl error: ' . curl_error($ch));
+            throw new Exception('Curl error: ' . curl_error($ch));
         }
 
         $this->response = new Response($this, $response, $info);

@@ -2,5 +2,5 @@
 
 namespace XeroPHP\Remote\OAuth;
 
-class XeroException extends \XeroPHP\XeroException {
+class Exception extends \XeroPHP\Exception {
 }
