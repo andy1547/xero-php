@@ -3,7 +3,6 @@
 namespace XeroPHP\Remote;
 
 use SimpleXMLElement;
-use XeroPHP\Exception;
 use XeroPHP\Helpers;
 use XeroPHP\Remote\Exception\BadRequestException;
 use XeroPHP\Remote\Exception\InternalErrorException;
@@ -73,6 +72,7 @@ class Response {
                 //This catches actual app errors
                 if(isset($this->root_error)) {
                     $message = sprintf('%s (%s)', $this->root_error['message'], implode(', ', $this->element_errors));
+                    $message .= $this->parseBadRequest();
                     throw new BadRequestException($message, $this->root_error['code']);
                 } else {
                     throw new BadRequestException();
@@ -110,6 +110,22 @@ class Response {
                 }
         }
     }
+
+	/**
+	 * @return string
+	 */
+	private function parseBadRequest(){
+		if (isset($this->elements)){
+			$field_errors = [];
+			foreach ($this->elements as $n => $element){
+				if (isset($element['ValidationErrors'])){
+					$field_errors[] = $element['ValidationErrors'][0]['Message'];
+				}
+			}
+			return "\nValidation errors:\n".implode("\n", $field_errors);
+		}
+		return '';
+	}
 
     public function getResponseBody(){
         return $this->response_body;
@@ -222,6 +238,11 @@ class Response {
                 case 'Message':
                     $this->root_error['message'] = (string) $root_child;
                     break;
+                case 'Payslip':
+                case 'PayItems':
+                    // some xero endpoints are 1D so we can parse them straight away
+                    $this->elements[] = Helpers::XMLToArray($root_child);
+                    break;
 
                 default:
                     //Happy to make the assumption that there will only be one root node with > than 2D children.
@@ -246,6 +267,11 @@ class Response {
                     break;
                 case 'Message':
                     $this->root_error['message'] = $root_child;
+                    break;
+                case 'Payslip':
+                case 'PayItems':
+                    // some xero endpoints are 1D so we can parse them straight away
+                    $this->elements[] = $root_child;
                     break;
 
                 default:

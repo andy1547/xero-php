@@ -3,7 +3,6 @@
 namespace XeroPHP\Remote;
 
 use XeroPHP\Application;
-use XeroPHP\Exception;
 
 /**
  * Object for representing a complete endpoint on the Xero APIs.  It also handles special URLs that may be passed in, eg
@@ -18,6 +17,7 @@ class URL {
     const API_CORE    = 'api.xro';
     const API_PAYROLL = 'payroll.xro';
     const API_FILE    = 'files.xro';
+    const API_ASSET   = 'assets.xro';
 
     const OAUTH_REQUEST_TOKEN = 'RequestToken';
     const OAUTH_ACCESS_TOKEN  = 'AccessToken';
@@ -39,7 +39,7 @@ class URL {
      * @param Application $app
      * @param $endpoint
      * @param null $api
-     * @throws \XeroPHP\Exception
+     * @throws Exception
      */
     public function __construct(Application $app, $endpoint, $api = null) {
 

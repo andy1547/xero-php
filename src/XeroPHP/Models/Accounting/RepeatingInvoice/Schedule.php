@@ -32,21 +32,22 @@ class Schedule extends Remote\Object
      */
 
     /**
-     * Invoice date the first invoice in the repeating schedule
+     * Date the first invoice of the current version of the repeating schedule was generated (changes when
+     * repeating invoice is edited)
      *
-     * @property \DateTime StartDate
+     * @property \DateTimeInterface StartDate
      */
 
     /**
      * The calendar date of the next invoice in the schedule to be generated
      *
-     * @property \DateTime NextScheduledDate
+     * @property \DateTimeInterface NextScheduledDate
      */
 
     /**
      * Invoice end date – only returned if the template has an end date set
      *
-     * @property \DateTime EndDate
+     * @property \DateTimeInterface EndDate
      */
 
 
@@ -122,9 +123,9 @@ class Schedule extends Remote\Object
             'Unit' => array (false, self::PROPERTY_TYPE_STRING, null, false, false),
             'DueDate' => array (false, self::PROPERTY_TYPE_INT, null, false, false),
             'DueDateType' => array (false, self::PROPERTY_TYPE_OBJECT, 'Accounting\\Organisation\\PaymentTerm', false, false),
-            'StartDate' => array (false, self::PROPERTY_TYPE_DATE, '\\DateTime', false, false),
-            'NextScheduledDate' => array (false, self::PROPERTY_TYPE_DATE, '\\DateTime', false, false),
-            'EndDate' => array (false, self::PROPERTY_TYPE_DATE, '\\DateTime', false, false)
+            'StartDate' => array (false, self::PROPERTY_TYPE_DATE, '\\DateTimeInterface', false, false),
+            'NextScheduledDate' => array (false, self::PROPERTY_TYPE_DATE, '\\DateTimeInterface', false, false),
+            'EndDate' => array (false, self::PROPERTY_TYPE_DATE, '\\DateTimeInterface', false, false)
         );
     }
 
@@ -210,7 +211,7 @@ class Schedule extends Remote\Object
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     public function getStartDate()
     {
@@ -218,10 +219,10 @@ class Schedule extends Remote\Object
     }
 
     /**
-     * @param \DateTime $value
+     * @param \DateTimeInterface $value
      * @return Schedule
      */
-    public function setStartDate(\DateTime $value)
+    public function setStartDate(\DateTimeInterface $value)
     {
         $this->propertyUpdated('StartDate', $value);
         $this->_data['StartDate'] = $value;
@@ -229,7 +230,7 @@ class Schedule extends Remote\Object
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     public function getNextScheduledDate()
     {
@@ -237,10 +238,10 @@ class Schedule extends Remote\Object
     }
 
     /**
-     * @param \DateTime $value
+     * @param \DateTimeInterface $value
      * @return Schedule
      */
-    public function setNextScheduledDate(\DateTime $value)
+    public function setNextScheduledDate(\DateTimeInterface $value)
     {
         $this->propertyUpdated('NextScheduledDate', $value);
         $this->_data['NextScheduledDate'] = $value;
@@ -248,7 +249,7 @@ class Schedule extends Remote\Object
     }
 
     /**
-     * @return \DateTime
+     * @return \DateTimeInterface
      */
     public function getEndDate()
     {
@@ -256,10 +257,10 @@ class Schedule extends Remote\Object
     }
 
     /**
-     * @param \DateTime $value
+     * @param \DateTimeInterface $value
      * @return Schedule
      */
-    public function setEndDate(\DateTime $value)
+    public function setEndDate(\DateTimeInterface $value)
     {
         $this->propertyUpdated('EndDate', $value);
         $this->_data['EndDate'] = $value;

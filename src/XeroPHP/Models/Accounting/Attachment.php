@@ -225,4 +225,11 @@ class Attachment extends Object {
         return false;
     }
 
+    static function getAPIStem() {
+        return '';
+    }
+
+    static function getRootNodeName() {
+        // TODO: Implement getRootNodeName() method.
+    }
 }
