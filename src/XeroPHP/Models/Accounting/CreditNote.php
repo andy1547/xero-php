@@ -105,7 +105,8 @@ class CreditNote extends Remote\Object
      */
 
     /**
-     * boolean to indicate if a credit note has been sent to a contact via the Xero app
+     * boolean to indicate if a credit note has been sent to a contact via the Xero app (currently read
+     * only)
      *
      * @property bool SentToContact
      */
@@ -233,7 +234,7 @@ class CreditNote extends Remote\Object
             'SentToContact' => array (false, self::PROPERTY_TYPE_BOOLEAN, null, false, false),
             'CurrencyRate' => array (false, self::PROPERTY_TYPE_FLOAT, null, false, false),
             'RemainingCredit' => array (false, self::PROPERTY_TYPE_STRING, null, false, false),
-            'Allocations' => array (false, self::PROPERTY_TYPE_OBJECT, 'Accounting\\CreditNote\\Allocation', true, false),
+            'Allocations' => array (false, self::PROPERTY_TYPE_OBJECT, 'Accounting\\CreditNote\\Allocation', true, true),
             'BrandingThemeID' => array (false, self::PROPERTY_TYPE_STRING, null, false, false),
             'HasAttachments' => array (false, self::PROPERTY_TYPE_BOOLEAN, null, false, false)
         );
@@ -640,16 +641,6 @@ class CreditNote extends Remote\Object
         return $this->_data['HasAttachments'];
     }
 
-    /**
-     * @param bool $value
-     * @return CreditNote
-     */
-    public function setHasAttachment($value)
-    {
-        $this->propertyUpdated('HasAttachments', $value);
-        $this->_data['HasAttachments'] = $value;
-        return $this;
-    }
 
 
 }

@@ -109,7 +109,20 @@ $scrape_apis = array(
             'folders',
             'associations'
         )
+    ),
+    array(
+        'name' => 'Assets API',
+        'uri' => 'assets-api',
+        'types' => 'types',
+        'namespace' => 'Assets',
+        'api_stem_constant' => 'API_ASSET',
+        'model_uris' => array(
+            'asset',
+            'asset-types',
+            'settings'
+        )
     )
+
 );
 
 
@@ -272,7 +285,7 @@ foreach($scrape_apis as $scrape_api) {
                     });
 
                     //filtering for properties that have special PUT/DELETE URI
-                    if(preg_match('/PUT\s\/?(?<primary_model>[a-z]+)\/[a-z0-9\-]+\/(?<secondary_model>[a-z]+)/i', $node->text(), $matches)){
+                    if(preg_match('/PUT\s\/?(?<primary_model>[a-z]+)\/{?[a-z0-9\-]+}?\/(?<secondary_model>[a-z]+)/i', $node->text(), $matches)){
                         /** @var Model $primary_model */
                         if($matches['primary_model'] === $primary_model->getName() && $primary_model->hasProperty($matches['secondary_model'])){
                             $primary_model->getProperty($matches['secondary_model'])->save_directly = true;
@@ -433,6 +446,10 @@ foreach($scrape_apis as $scrape_api) {
                                 // Don't make Primary GUID readonly
                                 if($column_name === $current_model->getClassName() . 'ID') {
                                     $read_only = false;
+                                } elseif(stripos($column_description, 'cannot be set') !== false){
+                                    $read_only = true;
+                                } elseif(stripos($column_description, 'has an attachment') !== false) {
+                                    $read_only = true;
                                 }
                                 $property = new Property($column_name, $column_description, $mandatory, $read_only);
                                 $current_model->addProperty($property, null, $get_only);

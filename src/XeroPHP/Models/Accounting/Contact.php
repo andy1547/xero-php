@@ -38,7 +38,7 @@ class Contact extends Remote\Object
      */
 
     /**
-     * Name of contact organisation (max length = 500)
+     * Full name of contact/organisation (max length = 255)
      *
      * @property string Name
      */
@@ -56,7 +56,7 @@ class Contact extends Remote\Object
      */
 
     /**
-     * Email address of contact person (umlauts not supported) (max length = 500)
+     * Email address of contact person (umlauts not supported) (max length = 255)
      *
      * @property string EmailAddress
      */
@@ -164,6 +164,20 @@ class Contact extends Remote\Object
      */
 
     /**
+     * The name of the Tracking Category assigned to the contact under SalesTrackingCategories and
+     * PurchasesTrackingCategories
+     *
+     * @property string TrackingCategoryName
+     */
+
+    /**
+     * The name of the Tracking Option assigned to the contact under SalesTrackingCategories and
+     * PurchasesTrackingCategories
+     *
+     * @property string TrackingCategoryOption
+     */
+
+    /**
      * The default payment terms for the contact – see Payment Terms
      *
      * @property PaymentTerm[] PaymentTerms
@@ -206,8 +220,8 @@ class Contact extends Remote\Object
      */
 
     /**
-     * The AccountsReceivable(sales invoices) and AccountsPayable(bills) outstanding and overdue amounts
-     * (read only)
+     * The raw AccountsReceivable(sales invoices) and AccountsPayable(bills) outstanding and overdue
+     * amounts, not converted to base currency (read only)
      *
      * @property string Balances
      */
@@ -317,6 +331,8 @@ class Contact extends Remote\Object
             'PurchasesDefaultAccountCode' => array (false, self::PROPERTY_TYPE_STRING, null, false, false),
             'SalesTrackingCategories' => array (false, self::PROPERTY_TYPE_OBJECT, 'Accounting\\TrackingCategory', true, false),
             'PurchasesTrackingCategories' => array (false, self::PROPERTY_TYPE_OBJECT, 'Accounting\\TrackingCategory', true, false),
+            'TrackingCategoryName' => array (false, self::PROPERTY_TYPE_STRING, null, false, false),
+            'TrackingCategoryOption' => array (false, self::PROPERTY_TYPE_STRING, null, false, false),
             'PaymentTerms' => array (false, self::PROPERTY_TYPE_OBJECT, 'Accounting\\Organisation\\PaymentTerm', true, false),
             'UpdatedDateUTC' => array (false, self::PROPERTY_TYPE_TIMESTAMP, '\\DateTimeInterface', false, false),
             'ContactGroups' => array (false, self::PROPERTY_TYPE_OBJECT, 'Accounting\\ContactGroup', true, false),
@@ -658,16 +674,6 @@ class Contact extends Remote\Object
         return $this->_data['IsSupplier'];
     }
 
-    /**
-     * @param bool $value
-     * @return Contact
-     */
-    public function setIsSupplier($value)
-    {
-        $this->propertyUpdated('IsSupplier', $value);
-        $this->_data['IsSupplier'] = $value;
-        return $this;
-    }
 
     /**
      * @return bool
@@ -677,16 +683,6 @@ class Contact extends Remote\Object
         return $this->_data['IsCustomer'];
     }
 
-    /**
-     * @param bool $value
-     * @return Contact
-     */
-    public function setIsCustomer($value)
-    {
-        $this->propertyUpdated('IsCustomer', $value);
-        $this->_data['IsCustomer'] = $value;
-        return $this;
-    }
 
     /**
      * @return string
@@ -807,6 +803,44 @@ class Contact extends Remote\Object
             $this->_data['PurchasesTrackingCategories'] = new Remote\Collection();
         }
         $this->_data['PurchasesTrackingCategories'][] = $value;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrackingCategoryName()
+    {
+        return $this->_data['TrackingCategoryName'];
+    }
+
+    /**
+     * @param string $value
+     * @return Contact
+     */
+    public function setTrackingCategoryName($value)
+    {
+        $this->propertyUpdated('TrackingCategoryName', $value);
+        $this->_data['TrackingCategoryName'] = $value;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTrackingCategoryOption()
+    {
+        return $this->_data['TrackingCategoryOption'];
+    }
+
+    /**
+     * @param string $value
+     * @return Contact
+     */
+    public function setTrackingCategoryOption($value)
+    {
+        $this->propertyUpdated('TrackingCategoryOption', $value);
+        $this->_data['TrackingCategoryOption'] = $value;
         return $this;
     }
 
@@ -978,16 +1012,6 @@ class Contact extends Remote\Object
         return $this->_data['HasAttachments'];
     }
 
-    /**
-     * @param bool $value
-     * @return Contact
-     */
-    public function setHasAttachment($value)
-    {
-        $this->propertyUpdated('HasAttachments', $value);
-        $this->_data['HasAttachments'] = $value;
-        return $this;
-    }
 
 
 }

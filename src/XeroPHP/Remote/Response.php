@@ -116,7 +116,7 @@ class Response {
 	 */
 	private function parseBadRequest(){
 		if (isset($this->elements)){
-			$errors = [];
+			$field_errors = [];
 			foreach ($this->elements as $n => $element){
 				if (isset($element['ValidationErrors'])){
 					$field_errors[] = $element['ValidationErrors'][0]['Message'];
@@ -238,6 +238,11 @@ class Response {
                 case 'Message':
                     $this->root_error['message'] = (string) $root_child;
                     break;
+                case 'Payslip':
+                case 'PayItems':
+                    // some xero endpoints are 1D so we can parse them straight away
+                    $this->elements[] = Helpers::XMLToArray($root_child);
+                    break;
 
                 default:
                     //Happy to make the assumption that there will only be one root node with > than 2D children.
@@ -262,6 +267,11 @@ class Response {
                     break;
                 case 'Message':
                     $this->root_error['message'] = $root_child;
+                    break;
+                case 'Payslip':
+                case 'PayItems':
+                    // some xero endpoints are 1D so we can parse them straight away
+                    $this->elements[] = $root_child;
                     break;
 
                 default:
